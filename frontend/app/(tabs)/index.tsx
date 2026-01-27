@@ -24,7 +24,7 @@ export default function HomeScreen() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.user_id}`,
+          Authorization: `Bearer ${sessionToken}`,
         },
         body: JSON.stringify({ friend_code: friendCode.toUpperCase() }),
       });
