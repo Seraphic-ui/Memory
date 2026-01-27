@@ -111,7 +111,7 @@ export default function BucketListScreen() {
               const response = await fetch(`${BACKEND_URL}/api/bucketlist/${itemId}`, {
                 method: 'DELETE',
                 headers: {
-                  Authorization: `Bearer ${user?.user_id}`,
+                  Authorization: `Bearer ${sessionToken}`,
                 },
               });
 
