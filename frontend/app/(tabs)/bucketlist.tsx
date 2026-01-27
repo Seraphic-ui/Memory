@@ -26,7 +26,7 @@ const CATEGORIES = [
 ];
 
 export default function BucketListScreen() {
-  const { user } = useAuth();
+  const { user, sessionToken } = useAuth();
   const router = useRouter();
   const [items, setItems] = useState<BucketItem[]>([]);
   const [loading, setLoading] = useState(true);
