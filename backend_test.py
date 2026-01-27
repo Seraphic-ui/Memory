@@ -251,12 +251,19 @@ class BackendTester:
             self.test_results["friend_connection"]["failed"] += 1
             self.test_results["friend_connection"]["errors"].append(f"connect-friend exception: {str(e)}")
 
-        # Test error cases
+        # Test error cases with fresh users
+        # Create a fresh user for error case testing
+        user3 = await self.create_test_user_in_db("error_test")
+        if not user3:
+            self.test_results["friend_connection"]["failed"] += 1
+            self.test_results["friend_connection"]["errors"].append("Failed to create user for error testing")
+            return
+        
         # Test invalid friend code
         try:
             response = await self.client.post(
                 f"{BACKEND_URL}/connect-friend",
-                headers={"Authorization": f"Bearer {user1['session_token']}"},
+                headers={"Authorization": f"Bearer {user3['session_token']}"},
                 json={"friend_code": "INVALID"}
             )
             
@@ -276,8 +283,8 @@ class BackendTester:
         try:
             response = await self.client.post(
                 f"{BACKEND_URL}/connect-friend",
-                headers={"Authorization": f"Bearer {user1['session_token']}"},
-                json={"friend_code": user1["friend_code"]}
+                headers={"Authorization": f"Bearer {user3['session_token']}"},
+                json={"friend_code": user3["friend_code"]}
             )
             
             if response.status_code == 400:
