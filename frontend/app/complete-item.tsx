@@ -9,7 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function CompleteItemScreen() {
-  const { user } = useAuth();
+  const { user, sessionToken } = useAuth();
   const router = useRouter();
   const { itemId } = useLocalSearchParams();
   const cameraRef = useRef<any>(null);
