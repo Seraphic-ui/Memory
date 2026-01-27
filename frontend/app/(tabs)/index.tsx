@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function HomeScreen() {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, sessionToken } = useAuth();
   const [friendCode, setFriendCode] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
