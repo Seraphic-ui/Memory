@@ -32,7 +32,7 @@ export default function CompletedScreen() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/completed`, {
         headers: {
-          Authorization: `Bearer ${user?.user_id}`,
+          Authorization: `Bearer ${sessionToken}`,
         },
       });
 
