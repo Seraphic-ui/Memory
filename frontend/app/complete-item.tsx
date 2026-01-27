@@ -91,7 +91,7 @@ export default function CompleteItemScreen() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.user_id}`,
+          Authorization: `Bearer ${sessionToken}`,
         },
         body: JSON.stringify({
           item_id: itemId,
