@@ -17,7 +17,7 @@ interface CompletedItem {
 }
 
 export default function CompletedScreen() {
-  const { user } = useAuth();
+  const { user, sessionToken } = useAuth();
   const [items, setItems] = useState<CompletedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<CompletedItem | null>(null);
