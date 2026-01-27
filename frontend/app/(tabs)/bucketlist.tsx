@@ -45,7 +45,7 @@ export default function BucketListScreen() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/bucketlist`, {
         headers: {
-          Authorization: `Bearer ${user?.user_id}`,
+          Authorization: `Bearer ${sessionToken}`,
         },
       });
 
