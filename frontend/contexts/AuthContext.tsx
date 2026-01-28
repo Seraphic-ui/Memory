@@ -145,8 +145,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const login = async () => {
+  const login = async (sessionTokenParam?: string) => {
     try {
+      // If session token is provided directly (email/password login)
+      if (sessionTokenParam) {
+        await AsyncStorage.setItem('session_token', sessionTokenParam);
+        setSessionToken(sessionTokenParam);
+        await fetchUser(sessionTokenParam);
+        return;
+      }
+
+      // Otherwise, use Google OAuth flow
       const redirectUrl = Platform.OS === 'web'
         ? `${BACKEND_URL}/`
         : Linking.createURL('/');
