@@ -20,7 +20,7 @@ interface AuthContextType {
   user: User | null;
   sessionToken: string | null;
   loading: boolean;
-  login: () => Promise<void>;
+  login: (sessionToken?: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
