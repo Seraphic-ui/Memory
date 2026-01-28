@@ -141,6 +141,110 @@ async def get_current_user(authorization: Optional[str] = Header(None)) -> User:
 
 # ============ AUTH ENDPOINTS ============
 
+# ============ EMAIL/PASSWORD AUTH ENDPOINTS ============
+
+@api_router.post("/auth/register", response_model=LoginResponse)
+async def register(request: RegisterRequest):
+    """Register a new user with email/password"""
+    # Check if user already exists
+    existing_user = await db.users.find_one(
+        {"email": request.email.lower()},
+        {"_id": 0}
+    )
+    
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Hash password
+    hashed_password = pwd_context.hash(request.password)
+    
+    # Generate unique user ID and friend code
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    friend_code = generate_friend_code()
+    
+    # Ensure friend code is unique
+    while await db.users.find_one({"friend_code": friend_code}):
+        friend_code = generate_friend_code()
+    
+    # Create user
+    user_doc = {
+        "user_id": user_id,
+        "email": request.email.lower(),
+        "name": request.name,
+        "password_hash": hashed_password,
+        "picture": None,
+        "friend_code": friend_code,
+        "partner_id": None,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.users.insert_one(user_doc)
+    
+    # Create session
+    session_token = f"session_{uuid.uuid4().hex}"
+    await db.user_sessions.insert_one({
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    # Return response
+    user_response = {
+        "user_id": user_id,
+        "email": request.email.lower(),
+        "name": request.name,
+        "picture": None,
+        "friend_code": friend_code,
+        "partner_id": None,
+        "created_at": user_doc["created_at"].isoformat()
+    }
+    
+    return LoginResponse(session_token=session_token, user=user_response)
+
+@api_router.post("/auth/login", response_model=LoginResponse)
+async def login(request: LoginRequest):
+    """Login with email/password"""
+    # Find user
+    user_doc = await db.users.find_one(
+        {"email": request.email.lower()},
+        {"_id": 0}
+    )
+    
+    if not user_doc:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Check if user has password (might be Google OAuth only user)
+    if "password_hash" not in user_doc:
+        raise HTTPException(status_code=401, detail="Please use Google sign-in for this account")
+    
+    # Verify password
+    if not pwd_context.verify(request.password, user_doc["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Create session
+    session_token = f"session_{uuid.uuid4().hex}"
+    await db.user_sessions.insert_one({
+        "user_id": user_doc["user_id"],
+        "session_token": session_token,
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    # Return response
+    user_response = {
+        "user_id": user_doc["user_id"],
+        "email": user_doc["email"],
+        "name": user_doc["name"],
+        "picture": user_doc.get("picture"),
+        "friend_code": user_doc["friend_code"],
+        "partner_id": user_doc.get("partner_id"),
+        "created_at": user_doc["created_at"].isoformat() if isinstance(user_doc["created_at"], datetime) else user_doc["created_at"]
+    }
+    
+    return LoginResponse(session_token=session_token, user=user_response)
+
+
 @api_router.post("/auth/session")
 async def create_session(session_id: str = Header(None, alias="X-Session-ID")):
     """Exchange session_id for session_token and user data"""
