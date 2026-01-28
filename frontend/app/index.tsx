@@ -9,7 +9,7 @@ const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 export default function Index() {
   const { user, loading, login } = useAuth();
   const router = useRouter();
-  const [authMode, setAuthMode] = useState<'choice' | 'login' | 'register'>('choice');
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
