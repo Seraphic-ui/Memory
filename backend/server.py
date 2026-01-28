@@ -33,7 +33,23 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Password hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 # ============ MODELS ============
+
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    password: str
+    name: str
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class LoginResponse(BaseModel):
+    session_token: str
+    user: dict
 
 class User(BaseModel):
     user_id: str
