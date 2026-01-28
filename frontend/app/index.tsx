@@ -100,70 +100,17 @@ export default function Index() {
     );
   }
 
-  if (authMode === 'choice') {
-    return (
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <MaterialCommunityIcons name="heart-multiple" size={80} color="#FF6B9D" />
-          <Text style={styles.title}>Memory Makers</Text>
-          <Text style={styles.subtitle}>Create memories together with your partner</Text>
-          
-          <View style={styles.features}>
-            <View style={styles.feature}>
-              <MaterialCommunityIcons name="account-heart" size={32} color="#FFA7C4" />
-              <Text style={styles.featureText}>Connect with your partner</Text>
-            </View>
-            <View style={styles.feature}>
-              <MaterialCommunityIcons name="format-list-checks" size={32} color="#FFA7C4" />
-              <Text style={styles.featureText}>Create bucket list together</Text>
-            </View>
-            <View style={styles.feature}>
-              <MaterialCommunityIcons name="camera" size={32} color="#FFA7C4" />
-              <Text style={styles.featureText}>Complete with Polaroid photos</Text>
-            </View>
-          </View>
-
-          <TouchableOpacity style={styles.button} onPress={login}>
-            <MaterialCommunityIcons name="google" size={24} color="#FFFFFF" />
-            <Text style={styles.buttonText}>Sign in with Google</Text>
-          </TouchableOpacity>
-
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          <TouchableOpacity style={styles.secondaryButton} onPress={() => setAuthMode('login')}>
-            <MaterialCommunityIcons name="email" size={24} color="#FF6B9D" />
-            <Text style={styles.secondaryButtonText}>Sign in with Email</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.textButton} onPress={() => setAuthMode('register')}>
-            <Text style={styles.textButtonText}>Don't have an account? Sign up</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <KeyboardAvoidingView 
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <TouchableOpacity style={styles.backButton} onPress={() => setAuthMode('choice')}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-
         <View style={styles.formContent}>
-          <MaterialCommunityIcons name="heart-multiple" size={60} color="#FF6B9D" />
-          <Text style={styles.formTitle}>
-            {authMode === 'login' ? 'Welcome Back' : 'Create Account'}
-          </Text>
-          <Text style={styles.formSubtitle}>
-            {authMode === 'login' ? 'Sign in to continue' : 'Join Memory Makers'}
+          <MaterialCommunityIcons name="heart-multiple" size={80} color="#FF6B9D" />
+          <Text style={styles.title}>Memory Makers</Text>
+          <Text style={styles.subtitle}>
+            {authMode === 'login' ? 'Welcome Back' : 'Create Your Account'}
           </Text>
 
           {authMode === 'register' && (
