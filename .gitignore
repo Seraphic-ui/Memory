@@ -82,3 +82,7 @@ android-sdk/ -e
 *.env
 *.env.*
 memory-makers-app.tar.gz
+-e 
+# Environment files
+*.env
+*.env.*
